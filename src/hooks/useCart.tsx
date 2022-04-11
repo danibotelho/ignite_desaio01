@@ -17,12 +17,15 @@ interface CartContextData {
   addProduct: (productId: number) => Promise<void>;
   removeProduct: (productId: number) => void;
   updateProductAmount: ({ productId, amount }: UpdateProductAmount) => void;
+  setCompraTotal: any;
+  compraTotal: any;
 }
 
 const CartContext = createContext<CartContextData>({} as CartContextData);
 
 export function CartProvider({ children }: CartProviderProps): JSX.Element {
- 
+  const [compraTotal, setCompraTotal] = useState('')
+
   const [cart, setCart] = useState<Product[]>(() => {
   const storagedCart = localStorage.getItem('@RocketShoes:cart')
      if (storagedCart) {
@@ -135,7 +138,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
 
   return (
     <CartContext.Provider
-      value={{ cart, addProduct, removeProduct, updateProductAmount }}
+      value={{ cart, addProduct, removeProduct, updateProductAmount , setCompraTotal, compraTotal}}
     >
       {children}
     </CartContext.Provider>
@@ -143,7 +146,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
 }
 
 export function useCart(): CartContextData {
-  const context = useContext(CartContext);
+  const context = useContext(CartContext); 
 
   return context;
 }

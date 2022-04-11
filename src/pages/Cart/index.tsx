@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   MdDelete,
   MdAddCircleOutline,
@@ -8,6 +8,7 @@ import {
 import { useCart } from '../../hooks/useCart';
 import { formatPrice } from '../../util/format';
 import { Container, ProductTable, Total } from './styles';
+import { Link } from 'react-router-dom';
 
 interface Product {
   id: number;
@@ -18,8 +19,9 @@ interface Product {
 }
 
 const Cart = (): JSX.Element => {
-   const { cart, removeProduct, updateProductAmount } = useCart();
-
+  
+   const { cart, removeProduct, updateProductAmount, setCompraTotal } = useCart();
+  
    const cartFormatted = cart.map(product => ({
      ...product,
      priceFormatted: formatPrice(product.price),
@@ -28,10 +30,13 @@ const Cart = (): JSX.Element => {
 
    const total = 
       formatPrice(
-      cart.reduce((sumTotal, product) => {
+        
+        cart.reduce((sumTotal, product) => {
         return sumTotal + product.price * product.amount
       }, 0)
     )
+
+    setCompraTotal(total);
 
   function handleProductIncrement(product: Product) {
    updateProductAmount({ productId: product.id, amount: product.amount + 1})
@@ -111,8 +116,13 @@ const Cart = (): JSX.Element => {
       </ProductTable>
 
       <footer>
-        <button type="button">Finalizar pedido</button>
-
+        <Container>
+          <Link to="/form">
+            <div>
+            <button type="button">Finalizar pedido</button>
+            </div>
+          </Link>
+        </Container>
         <Total>
           <span>TOTAL</span>
           <strong>{total}</strong>
